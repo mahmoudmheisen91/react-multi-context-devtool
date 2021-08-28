@@ -1,4 +1,5 @@
-import React, { useReducer, useCallback, createContext, useMemo } from "react";
+import React, { useCallback, createContext, useMemo } from "react";
+import { useReducer } from "./contextDevTools";
 
 const SET_DATA_00 = "SET_DATA_00";
 const SET_DATA_01 = "SET_DATA_01";
@@ -59,3 +60,5 @@ const Context0Provider = ({ children }) => {
 export const Context0 = createContext(initialState);
 
 export default Context0Provider;
+
+export { initialState, reducer };
