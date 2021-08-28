@@ -6,7 +6,7 @@ const SET_DATA_11 = "SET_DATA_11";
 
 const initialState = {
   data_10: false,
-  data_11: "",
+  data_11: 0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,8 +37,8 @@ const Context1Provider = ({ children }) => {
     dispatch({ type: SET_DATA_10 });
   }, []);
 
-  const setData11 = useCallback(() => {
-    dispatch({ type: SET_DATA_11 });
+  const setData11 = useCallback((payload) => {
+    dispatch({ type: SET_DATA_11, payload });
   }, []);
 
   const context_1_value = useMemo(() => {
