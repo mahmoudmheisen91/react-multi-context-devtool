@@ -15,7 +15,7 @@ function Comp0() {
   }, [setData01]);
 
   return (
-    <div className="comp0">
+    <div className="comp">
       <div style={{ fontWeight: "bold" }}>Comp 0</div>
       <div>{state.data_00?.count || 0}</div>
       <button onClick={handleData00}>set data_00</button>
