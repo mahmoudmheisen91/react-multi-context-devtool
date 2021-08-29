@@ -1,8 +1,12 @@
-import { useReducer as useReactReducer } from "react";
 import {
-  initialState as context_0_state,
-  reducer as context_0_reducer,
-} from "./context_0";
+  useReducer,
+  useEffect,
+  useState,
+  createContext,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 
 // only for development purposes
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -25,19 +29,78 @@ const createDevTool = (options) => {
 
 const devTool = createDevTool(devToolOptions);
 
-export const useReducer = (reducer, initialState) => {
-  const [state, dispatch] = useReactReducer(reducer, initialState);
-
-  let oldState = context_0_state;
-
-  function newDispatch(action) {
-    if (isDevelopment && typeof window === "object" && devToolExtension) {
-      const newState = context_0_reducer(oldState, action);
-      oldState = newState;
-      devTool.send({ ...action }, { context_0: newState });
-    }
-    return dispatch(action);
-  }
-
-  return [state, newDispatch];
+const initialState = {
+  globalState: {},
 };
+
+const rootReducer = (state = initialState, action) => {
+  let { type, payload } = action;
+
+  switch (type) {
+    case "SET_CONTEXT_0":
+      return {
+        ...state,
+        globalState: {
+          ...state.globalState,
+          context_0: payload,
+        },
+      };
+
+    case "SET_CONTEXT_1":
+      return {
+        ...state,
+        globalState: {
+          ...state.globalState,
+          context_1: payload,
+        },
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const DevContextProvider = ({ contexts, children }) => {
+  const [type, setType] = useState("INIT");
+  const [devToolState, dispatch] = useReducer(rootReducer, initialState);
+
+  const devToolDispatch = useCallback(
+    (action, type) => {
+      dispatch(action);
+      setType(type);
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    devTool.send({ type }, { ...devToolState });
+  }, [devToolState, type]);
+
+  const values = useMemo(() => {
+    return {
+      devToolState,
+      devToolDispatch,
+    };
+  }, [devToolState, devToolDispatch]);
+
+  return <DevContext.Provider value={values}>{children}</DevContext.Provider>;
+};
+
+export function useDevDispatch(dispatch, state, reducer, type) {
+  const { devToolDispatch } = useContext(DevContext);
+
+  const _dispatch = useCallback(
+    (dispatch, state, reducer, type, action) => {
+      if (isDevelopment && typeof window === "object" && devToolExtension) {
+        const newState = reducer(state, action);
+        devToolDispatch({ type, payload: newState }, action.type);
+      }
+      return dispatch(action);
+    },
+    [devToolDispatch]
+  );
+
+  return _dispatch.bind(this, dispatch, state, reducer, type);
+}
+
+export const DevContext = createContext(initialState);

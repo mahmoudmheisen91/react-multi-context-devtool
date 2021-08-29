@@ -1,5 +1,5 @@
-import React, { useCallback, useReducer, createContext, useMemo } from "react";
-// import { useReducer } from "./contextDevTools";
+import React, { useCallback, createContext, useMemo, useReducer } from "react";
+import { useDevDispatch } from "./contextDevTools";
 
 const SET_DATA_10 = "SET_DATA_10";
 const SET_DATA_11 = "SET_DATA_11";
@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
     case SET_DATA_10:
       return {
         ...state,
-        data_10: !state.data_10,
+        data_10: !state?.data_10,
       };
 
     case SET_DATA_11:
@@ -31,15 +31,21 @@ const reducer = (state = initialState, action) => {
 };
 
 const Context1Provider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, _dispatch] = useReducer(reducer, initialState);
+  const dispatch = useDevDispatch(
+    _dispatch,
+    state,
+    reducer,
+    "SET_CONTEXT_1"
+  );
 
   const setData10 = useCallback(() => {
     dispatch({ type: SET_DATA_10 });
-  }, []);
+  }, [dispatch]);
 
   const setData11 = useCallback((payload) => {
     dispatch({ type: SET_DATA_11, payload });
-  }, []);
+  }, [dispatch]);
 
   const context_1_value = useMemo(() => {
     return {
