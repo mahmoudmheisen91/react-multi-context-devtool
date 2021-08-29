@@ -32,20 +32,18 @@ const reducer = (state = initialState, action) => {
 
 const Context1Provider = ({ children }) => {
   const [state, _dispatch] = useReducer(reducer, initialState);
-  const dispatch = useDevDispatch(
-    _dispatch,
-    state,
-    reducer,
-    "SET_CONTEXT_1"
-  );
+  const dispatch = useDevDispatch(_dispatch, state, reducer, "context_1");
 
   const setData10 = useCallback(() => {
     dispatch({ type: SET_DATA_10 });
   }, [dispatch]);
 
-  const setData11 = useCallback((payload) => {
-    dispatch({ type: SET_DATA_11, payload });
-  }, [dispatch]);
+  const setData11 = useCallback(
+    (payload) => {
+      dispatch({ type: SET_DATA_11, payload });
+    },
+    [dispatch]
+  );
 
   const context_1_value = useMemo(() => {
     return {

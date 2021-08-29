@@ -33,36 +33,22 @@ const initialState = {
   globalState: {},
 };
 
-const rootReducer = (state = initialState, action) => {
-  let { type, payload } = action;
+const devToolReducer = (state = initialState, action) => {
+  const { type, payload } = action;
 
-  switch (type) {
-    case "SET_CONTEXT_0":
-      return {
-        ...state,
-        globalState: {
-          ...state.globalState,
-          context_0: payload,
-        },
-      };
-
-    case "SET_CONTEXT_1":
-      return {
-        ...state,
-        globalState: {
-          ...state.globalState,
-          context_1: payload,
-        },
-      };
-
-    default:
-      return state;
-  }
+  return {
+    ...state,
+    globalState: {
+      ...state.globalState,
+      [type]: payload,
+    },
+  };
 };
 
-export const DevContextProvider = ({ contexts, children }) => {
+export const DevContextProvider = ({ children }) => {
   const [type, setType] = useState("INIT");
-  const [devToolState, dispatch] = useReducer(rootReducer, initialState);
+
+  const [devToolState, dispatch] = useReducer(devToolReducer, initialState);
 
   const devToolDispatch = useCallback(
     (action, type) => {
@@ -86,21 +72,21 @@ export const DevContextProvider = ({ contexts, children }) => {
   return <DevContext.Provider value={values}>{children}</DevContext.Provider>;
 };
 
-export function useDevDispatch(dispatch, state, reducer, type) {
+export function useDevDispatch(dispatch, state, reducer, contextName) {
   const { devToolDispatch } = useContext(DevContext);
 
   const _dispatch = useCallback(
-    (dispatch, state, reducer, type, action) => {
+    (dispatch, state, reducer, contextName, action) => {
       if (isDevelopment && typeof window === "object" && devToolExtension) {
         const newState = reducer(state, action);
-        devToolDispatch({ type, payload: newState }, action.type);
+        devToolDispatch({ type: contextName, payload: newState }, action.type);
       }
       return dispatch(action);
     },
     [devToolDispatch]
   );
 
-  return _dispatch.bind(this, dispatch, state, reducer, type);
+  return _dispatch.bind(this, dispatch, state, reducer, contextName);
 }
 
 export const DevContext = createContext(initialState);
