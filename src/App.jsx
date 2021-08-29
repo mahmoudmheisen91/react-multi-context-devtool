@@ -1,7 +1,7 @@
 import React from "react";
 import Context0Provider from "./contexts/context_0";
 import Context1Provider from "./contexts/context_1";
-import { DevContextProvider } from "./contexts/contextDevTools";
+import { DevToolProvider } from "./contexts/contextDevTools";
 
 import Comp0 from "./Comp0";
 import Comp1 from "./Comp1";
@@ -13,20 +13,20 @@ const config = {
     name: "My-Context",
     trace: true,
   },
-  env: "development"
+  env: ["development"]
 };
 
 function App() {
   return (
     <div className="App">
-      <DevContextProvider devToolConfig={config}>
+      <DevToolProvider devToolConfig={config}>
         <Context0Provider>
           <Comp0 />
         </Context0Provider>
         <Context1Provider>
           <Comp1 />
         </Context1Provider>
-      </DevContextProvider>
+      </DevToolProvider>
     </div>
   );
 }

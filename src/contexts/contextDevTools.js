@@ -9,7 +9,8 @@ import {
   useRef,
 } from "react";
 
-const devToolExtension = window?.__REDUX_DEVTOOLS_EXTENSION__;
+const devToolExtension =
+  typeof window === "object" && window?.__REDUX_DEVTOOLS_EXTENSION__;
 
 const initialState = {
   globalState: {},
@@ -27,7 +28,7 @@ const devToolReducer = (state = initialState, action) => {
   };
 };
 
-export const DevContextProvider = ({ devToolConfig, children }) => {
+export const DevToolProvider = ({ devToolConfig = {}, children }) => {
   const [type, setType] = useState("INIT");
   const [isDevelopment, setIsDevelopment] = useState(true);
   const [devToolOptions, setDevToolOptions] = useState({});
@@ -36,7 +37,7 @@ export const DevContextProvider = ({ devToolConfig, children }) => {
 
   // create devtool with options
   const createDevTool = useCallback(() => {
-    if (isDevelopment && typeof window === "object" && devToolExtension) {
+    if (isDevelopment && devToolExtension) {
       return devToolExtension.connect(devToolOptions);
     } else {
       return (f) => f;
@@ -52,18 +53,32 @@ export const DevContextProvider = ({ devToolConfig, children }) => {
   );
 
   useEffect(() => {
-    setIsDevelopment(process.env.NODE_ENV === devToolConfig?.env);
+    let isDev = false;
+    if (!devToolConfig?.env) {
+      isDev = process.env.NODE_ENV === "development";
+    } else if (typeof devToolConfig.env === "string") {
+      isDev = process.env.NODE_ENV === devToolConfig.env;
+    } else if (Array.isArray(devToolConfig.env)) {
+      devToolConfig.env.map((item) => {
+        isDev = isDev || process.env.NODE_ENV === item;
+        return item;
+      });
+    } else {
+      isDev = process.env.NODE_ENV === "development";
+    }
+    setIsDevelopment(isDev);
     setDevToolOptions(devToolConfig?.reduxDevToolOptions);
   }, [devToolConfig]);
 
   useEffect(() => {
     devTool.current = createDevTool();
-    devTool.current.send({ type: "INIT" }, { ...initialState });
-  }, [createDevTool]);
+    isDevelopment &&
+      devTool.current.send({ type: "INIT" }, { ...initialState });
+  }, [createDevTool, isDevelopment]);
 
   useEffect(() => {
-    devTool.current.send({ type }, { ...devToolState });
-  }, [devToolState, type, devTool]);
+    isDevelopment && devTool.current.send({ type }, { ...devToolState });
+  }, [devToolState, type, devTool, isDevelopment]);
 
   const values = useMemo(() => {
     return {
@@ -76,12 +91,12 @@ export const DevContextProvider = ({ devToolConfig, children }) => {
   return <DevContext.Provider value={values}>{children}</DevContext.Provider>;
 };
 
-export function useDevDispatch(dispatch, state, reducer, contextName) {
+export function useDevToolDispatch(dispatch, state, reducer, contextName) {
   const { devToolDispatch, isDevelopment } = useContext(DevContext);
 
   const _dispatch = useCallback(
     (dispatch, state, reducer, contextName, action) => {
-      if (isDevelopment && typeof window === "object" && devToolExtension) {
+      if (isDevelopment && devToolExtension) {
         const newState = reducer(state, action);
         devToolDispatch({ type: contextName, payload: newState }, action.type);
       }

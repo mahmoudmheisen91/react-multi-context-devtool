@@ -1,5 +1,5 @@
 import React, { useCallback, createContext, useMemo, useReducer } from "react";
-import { useDevDispatch } from "./contextDevTools";
+import { useDevToolDispatch } from "./contextDevTools";
 
 const SET_DATA_10 = "SET_DATA_10";
 const SET_DATA_11 = "SET_DATA_11";
@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
 
 const Context1Provider = ({ children }) => {
   const [state, _dispatch] = useReducer(reducer, initialState);
-  const dispatch = useDevDispatch(_dispatch, state, reducer, "context_1");
+  const dispatch = useDevToolDispatch(_dispatch, state, reducer, "context_1");
 
   const setData10 = useCallback(() => {
     dispatch({ type: SET_DATA_10 });
