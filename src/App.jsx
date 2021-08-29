@@ -8,10 +8,18 @@ import Comp1 from "./Comp1";
 
 import "./App.scss";
 
+const config = {
+  reduxDevToolOptions: {
+    name: "My-Context",
+    trace: true,
+  },
+  env: "development"
+};
+
 function App() {
   return (
     <div className="App">
-      <DevContextProvider>
+      <DevContextProvider devToolConfig={config}>
         <Context0Provider>
           <Comp0 />
         </Context0Provider>
