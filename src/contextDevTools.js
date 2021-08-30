@@ -5,11 +5,10 @@ import {
   createContext,
   useCallback,
   useMemo,
-  useContext,
   useRef,
 } from "react";
 
-const devToolExtension =
+export const devToolExtension =
   typeof window === "object" && window?.__REDUX_DEVTOOLS_EXTENSION__;
 
 const initialState = {
@@ -91,21 +90,6 @@ export const DevToolProvider = ({ devToolConfig = {}, children }) => {
   return <DevContext.Provider value={values}>{children}</DevContext.Provider>;
 };
 
-export function useDevToolDispatch(dispatch, state, reducer, contextName) {
-  const { devToolDispatch, isDevelopment } = useContext(DevContext);
 
-  const _dispatch = useCallback(
-    (dispatch, state, reducer, contextName, action) => {
-      if (isDevelopment && devToolExtension) {
-        const newState = reducer(state, action);
-        devToolDispatch({ type: contextName, payload: newState }, action.type);
-      }
-      return dispatch(action);
-    },
-    [devToolDispatch, isDevelopment]
-  );
-
-  return _dispatch.bind(this, dispatch, state, reducer, contextName);
-}
 
 export const DevContext = createContext(initialState);

@@ -1,5 +1,5 @@
 import React, { useCallback, createContext, useMemo, useReducer } from "react";
-import { useDevToolDispatch } from "./contextDevTools";
+import { useDevToolDispatch } from "../lib/useDevToolDispatch";
 
 const SET_DATA_10 = "SET_DATA_10";
 const SET_DATA_11 = "SET_DATA_11";
