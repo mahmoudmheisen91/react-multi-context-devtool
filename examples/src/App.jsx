@@ -1,7 +1,7 @@
 import React from "react";
 import Context0Provider from "./contexts/context_0";
 import Context1Provider from "./contexts/context_1";
-import { DevToolProvider } from "./lib/contextDevTools";
+import { DevToolProvider } from "react-multi-context-devtool";
 
 import Comp0 from "./Comp0";
 import Comp1 from "./Comp1";
