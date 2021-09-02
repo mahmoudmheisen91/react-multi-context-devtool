@@ -9,6 +9,8 @@ require("core-js/modules/web.dom-collections.iterator.js");
 
 var _react = require("react");
 
+var _jsxRuntime = require("react/jsx-runtime");
+
 var _window;
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -96,9 +98,10 @@ const DevToolProvider = _ref => {
       devToolDispatch
     };
   }, [devToolState, isDevelopment, devToolDispatch]);
-  return /*#__PURE__*/React.createElement(DevContext.Provider, {
-    value: values
-  }, children);
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(DevContext.Provider, {
+    value: values,
+    children: children
+  });
 };
 
 exports.DevToolProvider = DevToolProvider;

@@ -1,7 +1,7 @@
 {
   "name": "react-multi-context-devtool",
   "description": "simple package to use redux devtool with multiple react context",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Mahmoud Mheisen",
   "keywords": [
     "react",
@@ -20,10 +20,7 @@
     "url": "git+https://github.com/mahmoudmheisen91/react-multi-context-devtool.git"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3"
+    "@babel/polyfill": "^7.12.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -57,6 +54,9 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3",
     "sass": "^1.38.1"
   }
 }
